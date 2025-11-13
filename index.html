@@ -80,6 +80,21 @@
         .location-link:hover {
             transform: scale(1.02);
         }
+
+        /* Style for the full-screen menu modal */
+        #menuModal .menu-image {
+            width: 100%;
+            height: auto;
+            max-width: 800px; /* Limit max width for desktop viewing */
+            margin: 0 auto; /* Center the image */
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s;
+        }
+        
+        #menuModal .menu-image:hover {
+            transform: scale(1.01);
+        }
     </style>
 </head>
 <!-- Adjusted body padding-top for the new top bar (h-16 = 4rem = 64px) --><body class="bg-primary-dark text-white font-sans pt-16" style="padding-bottom: 64px;">
@@ -87,38 +102,32 @@
     <!-- Fixed Top Navigation Bar with Logo and Name (h-16) --><header class="fixed top-0 left-0 right-0 bg-primary-dark h-16 flex items-center px-4 z-50 shadow-lg justify-between">
         <a href="#hero" class="flex items-center space-x-3 h-full"> <!-- Container height maintained --><img src="https://i.imgur.com/Ydc39Ii.png" alt="Little Shack Logo" class="h-[60px] object-contain"> <!-- Size forced to 60px (near h-16/64px) and object-contain corrected --><span class="font-bebas-neue text-3xl sm:text-4xl text-[#718FAD] tracking-tight no-box drop-shadow-lg leading-none">LITTLE SHACK</span>
         </a>
-        <!-- Hamburger Button -->
-        <button id="menu-button" class="text-white p-2 focus:outline-none z-50 md:hidden" onclick="toggleMenu()">
+        <!-- Hamburger Button --><button id="menu-button" class="text-white p-2 focus:outline-none z-50 md:hidden" onclick="toggleMenu()">
             <svg id="menu-icon-open" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
             <svg id="menu-icon-close" class="w-8 h-8 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
     </header>
 
-    <!-- Mobile Menu (Hidden, Full-Screen Overlay) -->
-    <nav id="mobile-menu" class="fixed top-0 left-0 w-full h-full bg-primary-dark/95 backdrop-blur-sm z-40 transform -translate-x-full transition-transform duration-300 pt-20 hidden md:hidden">
+    <!-- Mobile Menu (Hidden, Full-Screen Overlay) --><nav id="mobile-menu" class="fixed top-0 left-0 w-full h-full bg-primary-dark/95 backdrop-blur-sm z-40 transform -translate-x-full transition-transform duration-300 pt-20 hidden md:hidden">
         <div class="flex flex-col p-4 space-y-4">
             <h3 class="text-xl font-bebas-neue tracking-widest text-[#718FAD] mb-2 px-2">Navigation</h3>
 
-            <!-- Call Button -->
-            <button onclick="handleMobileMenuClick('locationModal', 'call')" class="w-full flex items-center space-x-4 p-4 text-left text-white bg-secondary-blue rounded-lg hover:bg-[#152339] transition shadow-md">
+            <!-- Call Button --><button onclick="handleMobileMenuClick('locationModal')" class="w-full flex items-center space-x-4 p-4 text-left text-white bg-secondary-blue rounded-lg hover:bg-[#152339] transition shadow-md">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                 <span class="text-lg font-semibold">Call & Locations</span>
             </button>
 
-            <!-- Merch Button (NEW) -->
-            <a href="https://carlosalbertojimenez834-dotcom.github.io/merch-little-shack/" target="_blank" onclick="closeMenu()" class="w-full flex items-center space-x-4 p-4 text-left text-white bg-secondary-blue rounded-lg hover:bg-[#152339] transition shadow-md">
+            <!-- Merch Button (NEW) --><a href="https://carlosalbertojimenez834-dotcom.github.io/merch-little-shack/" target="_blank" onclick="closeMenu()" class="w-full flex items-center space-x-4 p-4 text-left text-white bg-secondary-blue rounded-lg hover:bg-[#152339] transition shadow-md">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                 <span class="text-lg font-semibold">Merch</span>
             </a>
 
-            <!-- Menu Button -->
-            <a href="#menu" onclick="handleMobileMenuClick('menu')" class="w-full flex items-center space-x-4 p-4 text-left text-white bg-secondary-blue rounded-lg hover:bg-[#152339] transition shadow-md">
+            <!-- Menu Button (Opens Menu Modal) --><button onclick="handleMobileMenuClick('menuModal')" class="w-full flex items-center space-x-4 p-4 text-left text-white bg-secondary-blue rounded-lg hover:bg-[#152339] transition shadow-md">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.8 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.8 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.2 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
                 <span class="text-lg font-semibold">Menu</span>
-            </a >
+            </button>
 
-            <!-- Order Now Button (Opens Modal) -->
-            <button onclick="handleMobileMenuClick('orderModal')" class="w-full flex items-center space-x-4 p-4 text-left text-white bg-custom-red rounded-lg hover:bg-red-700 transition shadow-md">
+            <!-- Order Now Button (Opens Order Modal) --><button onclick="handleMobileMenuClick('orderModal')" class="w-full flex items-center space-x-4 p-4 text-left text-white bg-custom-red rounded-lg hover:bg-red-700 transition shadow-md">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                 <span class="text-lg font-semibold">Order Now</span>
             </button>
@@ -188,21 +197,18 @@
         </div>
     </section>
 
-    <!-- Contact Form Section -->
-    <section id="contact" class="py-12 px-4 sm:px-8 bg-secondary-blue">
+    <!-- Contact Form Section --><section id="contact" class="py-12 px-4 sm:px-8 bg-secondary-blue">
         <div class="max-w-xl mx-auto">
             <h2 class="text-4xl text-white font-bebas-neue tracking-widest text-center mb-6">CONTACT US</h2>
             <p class="text-center text-gray-300 mb-8">Send us your questions, comments, or requests. We will get back to you as soon as possible.</p>
 
             <form id="contactForm" class="space-y-4 p-6 bg-primary-dark rounded-xl shadow-2xl border border-accent-gold/20" onsubmit="submitContactForm(event)">
-                <!-- Name -->
-                <div>
+                <!-- Name --><div>
                     <label for="name" class="block text-sm font-medium text-gray-300">Name</label>
                     <input type="text" id="name" name="name" required class="mt-1 block w-full px-4 py-2 rounded-lg bg-secondary-blue border border-gray-600 focus:border-accent-gold focus:ring-accent-gold text-white shadow-sm transition">
                 </div>
 
-                <!-- Phone & Email (Responsive Grid) -->
-                <div class="sm:grid sm:grid-cols-2 sm:gap-4">
+                <!-- Phone & Email (Responsive Grid) --><div class="sm:grid sm:grid-cols-2 sm:gap-4">
                     <div>
                         <label for="phone" class="block text-sm font-medium text-gray-300">Phone Number</label>
                         <input type="tel" id="phone" name="phone" required class="mt-1 block w-full px-4 py-2 rounded-lg bg-secondary-blue border border-gray-600 focus:border-accent-gold focus:ring-accent-gold text-white shadow-sm transition">
@@ -214,17 +220,14 @@
                     </div>
                 </div>
 
-                <!-- Message -->
-                <div>
+                <!-- Message --><div>
                     <label for="message" class="block text-sm font-medium text-gray-300">Message</label>
                     <textarea id="message" name="message" rows="4" required class="mt-1 block w-full px-4 py-2 rounded-lg bg-secondary-blue border border-gray-600 focus:border-accent-gold focus:ring-accent-gold text-white shadow-sm transition"></textarea>
                 </div>
 
-                <!-- Response Message Box (for feedback) -->
-                <div id="response-message" class="hidden p-3 rounded-lg text-sm font-medium transition duration-300 text-center"></div>
+                <!-- Response Message Box (for feedback) --><div id="response-message" class="hidden p-3 rounded-lg text-sm font-medium transition duration-300 text-center"></div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="w-full flex items-center justify-center space-x-2 py-3 px-4 border border-transparent rounded-full shadow-lg text-lg font-bold text-white bg-custom-red hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50 transition duration-300 uppercase">
+                <!-- Submit Button --><button type="submit" class="w-full flex items-center justify-center space-x-2 py-3 px-4 border border-transparent rounded-full shadow-lg text-lg font-bold text-white bg-custom-red hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50 transition duration-300 uppercase">
                     Submit Message
                     <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.842 5.228A2 2 0 0012 14c.737 0 1.432-.23 2.158-.772L21 8m-6 10H8a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2z"></path></svg>
                 </button>
@@ -245,13 +248,12 @@
                 <span class="text-xs mt-1 text-white">Merch</span>
             </a>
 
-            <!-- Menu Button - Icons and text now white --><a href="#menu" class="flex-1 flex flex-col items-center justify-center text-white hover:bg-secondary-blue transition duration-300 p-2">
+            <!-- Menu Button (Opens Menu Modal) --><button onclick="document.getElementById('menuModal').classList.remove('hidden');" class="flex-1 flex flex-col items-center justify-center text-white hover:bg-secondary-blue transition duration-300 p-2">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.8 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.8 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.2 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
                 <span class="text-xs mt-1 text-white">Menu</span>
-            </a >
+            </button>
 
-            <!-- Order Now Button (Opens Modal) -->
-            <button onclick="document.getElementById('orderModal').classList.remove('hidden');" class="flex-1 flex flex-col items-center justify-center text-white hover:bg-secondary-blue transition duration-300 p-2 rounded-tr-xl">
+            <!-- Order Now Button (Opens Order Modal) --><button onclick="document.getElementById('orderModal').classList.remove('hidden');" class="flex-1 flex flex-col items-center justify-center text-white hover:bg-secondary-blue transition duration-300 p-2 rounded-tr-xl">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                 <span class="text-xs mt-1 text-white">Order Now</span>
             </button>
@@ -269,12 +271,27 @@
         </div>
     </div>
     
-    <!-- Order Options Modal (New Modal) --><div id="orderModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-[60]" onclick="this.classList.add('hidden')">
+    <!-- Menu Modal (NEW Full-Screen Modal for Menu Images) --><div id="menuModal" class="fixed inset-0 bg-primary-dark/95 backdrop-blur-sm hidden flex items-center justify-center z-[60]" onclick="this.classList.add('hidden')">
+        <div class="p-4 w-full h-full flex flex-col" onclick="event.stopPropagation()">
+            <h3 class="text-4xl font-bebas-neue text-accent-gold tracking-wider mb-4 text-center">OUR MENU</h3>
+            
+            <!-- Close button at the top --><button onclick="document.getElementById('menuModal').classList.add('hidden');" class="absolute top-4 right-4 text-white p-3 rounded-full bg-custom-red/80 hover:bg-custom-red transition shadow-lg z-50">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <!-- Menu Images Container (Scrollable) --><div class="flex-1 overflow-y-auto space-y-8 py-4 px-2">
+                <img src="https://i.imgur.com/FKSqYbd.jpeg" alt="Menu Page 1" class="menu-image object-contain">
+                <img src="https://i.imgur.com/8B4ZqoD.jpeg" alt="Menu Page 2" class="menu-image object-contain">
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Order Options Modal --><div id="orderModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-[60]" onclick="this.classList.add('hidden')">
         <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl max-w-lg w-11/12 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
             <h3 class="text-3xl font-bebas-neue text-custom-red tracking-wider mb-6 text-center">HOW WOULD YOU LIKE TO ORDER?</h3>
             
-            <!-- Option 1: Uber Eats -->
-            <a id="uberEatsLink" href="" target="_blank" onclick="document.getElementById('orderModal').classList.add('hidden');" class="block mb-6 p-4 bg-green-600 hover:bg-green-700 transition duration-300 rounded-lg shadow-lg transform hover:scale-[1.02] cursor-pointer">
+            <!-- Option 1: Uber Eats --><a id="uberEatsLink" href="" target="_blank" onclick="document.getElementById('orderModal').classList.add('hidden');" class="block mb-6 p-4 bg-green-600 hover:bg-green-700 transition duration-300 rounded-lg shadow-lg transform hover:scale-[1.02] cursor-pointer">
                 <div class="flex items-center text-white">
                     <!-- Icon placeholder for delivery app --><svg class="w-8 h-8 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3 .895 3 2s-1.343 2-3 2-3 .895-3 2 1.343 2 3 2m0-8V6m0 4v3m0 3v2m0 0h12a2 2 0 002-2v-3a2 2 0 00-2-2H4a2 2 0 00-2 2v3a2 2 0 002 2h12zm-3-8h6a2 2 0 002-2V5a2 2 0 00-2-2h-6a2 2 0 00-2 2v3a2 2 0 002 2z"></path></svg>
                     <div>
@@ -284,16 +301,13 @@
                 </div>
             </a>
 
-            <!-- Option 2: Order Online at Branch -->
-            <div class="mb-4">
+            <!-- Option 2: Order Online at Branch --><div class="mb-4">
                 <h4 class="text-xl font-bold text-primary-dark mb-3 border-b-2 border-primary-dark/20 pb-1">Order Online for Pickup:</h4>
                 <div id="branchOrderList" class="space-y-3">
-                    <!-- Dynamic SpotOn links injected here by JS -->
-                </div>
+                    <!-- Dynamic SpotOn links injected here by JS --></div>
             </div>
             
-            <!-- Close Button -->
-            <button onclick="document.getElementById('orderModal').classList.add('hidden');" class="mt-4 bg-primary-dark text-white font-bold py-3 px-4 rounded-full w-full hover:bg-secondary-blue transition uppercase text-sm">Close</button>
+            <!-- Close Button --><button onclick="document.getElementById('orderModal').classList.add('hidden');" class="mt-4 bg-primary-dark text-white font-bold py-3 px-4 rounded-full w-full hover:bg-secondary-blue transition uppercase text-sm">Close</button>
         </div>
     </div>
 
@@ -362,22 +376,14 @@
 
         function handleMobileMenuClick(target) {
             closeMenu();
-            if (target === 'locationModal') {
-                // Delay opening modal until menu is closed
-                setTimeout(() => {
-                     document.getElementById('locationModal').classList.remove('hidden');
-                }, 350); 
-            } else if (target === 'orderModal') {
-                // Delay opening modal until menu is closed
-                setTimeout(() => {
-                     document.getElementById('orderModal').classList.remove('hidden');
-                }, 350);
-            } else if (target === 'menu') {
-                // Scrolls to the menu section
-                setTimeout(() => {
-                    document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' });
-                }, 350);
-            }
+            // Delay opening modal until menu is closed
+            setTimeout(() => {
+                const modal = document.getElementById(target);
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            }, 350); 
+            
             // For Merch (external link), closing the menu is enough as the link handles navigation
         }
         // --- END MOBILE MENU FUNCTIONS ---

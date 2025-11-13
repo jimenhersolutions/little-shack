@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LITTLE SHACK - The Best Seafood in El Paso</title>
+    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Import Google Fonts Bebas Neue for "industrial/stencil" style --><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <!-- Tailwind config for Inter font and custom colors --><script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#264973', // Main Background
+                        'accent-gold': '#FFD700', // Gold accent (reverted)
+                        'secondary-blue': '#1c2e4a', // Intermediate dark blue
+                        'custom-red': '#D12A2A', // New color for carousel subtitle
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        'bebas-neue': ['Bebas Neue', 'sans-serif'], 
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Style to ensure the carousel covers the full width and is responsive */
+        .carousel-item {
+            width: 100%;
+            height: 70vh; /* Generous height for the hero on mobile and desktop */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Class for the overlaid text on the hero (centered and elegant) */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.4); /* Shadow to make text pop */
+        }
+        
+        /* Ensure text does not have boxes */
+        .no-box {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Style for the fixed footer buttons */
+        .fixed-footer {
+            height: 64px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Style for full-width image sections */
+        .full-width-image {
+            width: 100%;
+            height: 50vh; /* Height for the rest of the images */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Specific style for location links inside the modal */
+        .location-link {
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .location-link:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<!-- Adjusted body padding-top for the new top bar (h-16 = 4rem = 64px) --><body class="bg-primary-dark text-white font-sans pt-16" style="padding-bottom: 64px;">
+
+    <!-- Fixed Top Navigation Bar with Logo and Name (h-16) --><header class="fixed top-0 left-0 right-0 bg-primary-dark h-16 flex items-center px-4 z-50 shadow-lg justify-between">
+        <a href="#hero" class="flex items-center space-x-3 h-full"> <!-- Container height maintained --><img src="https://i.imgur.com/Ydc39Ii.png" alt="Little Shack Logo" class="h-[60px] object-contain"> <!-- Size forced to 60px (near h-16/64px) and object-contain corrected --><span class="font-bebas-neue text-3xl sm:text-4xl text-[#718FAD] tracking-tight no-box drop-shadow-lg leading-none">LITTLE SHACK</span>
+        </a>
+        <!-- Hamburger Button -->
+        <button id="menu-button" class="text-white p-2 focus:outline-none z-50 md:hidden" onclick="toggleMenu()">
+            <svg id="menu-icon-open" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            <svg id="menu-icon-close" class="w-8 h-8 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+    </header>
+
+    <!-- Mobile Menu (Hidden, Full-Screen Overlay) -->
+    <nav id="mobile-menu" class="fixed top-0 left-0 w-full h-full bg-primary-dark/95 backdrop-blur-sm z-40 transform -translate-x-full transition-transform duration-300 pt-20 hidden md:hidden">
+        <div class="flex flex-col p-4 space-y-4">
+            <h3 class="text-xl font-bebas-neue tracking-widest text-[#718FAD] mb-2 px-2">Navigation</h3>
+
+            <!-- Call Button -->
+            <button onclick="handleMobileMenuClick('locationModal', 'call')" class="w-full flex items-center space-x-4 p-4 text-left text-white bg-secondary-blue rounded-lg hover:bg-[#152339] transition shadow-md">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                <span class="text-lg font-semibold">Call & Locations</span>
+            </button>
+
+            <!-- Merch Button (NEW) -->
+            <a href="https://carlosalbertojimenez834-dotcom.github.io/merch-little-shack/" target="_blank" onclick="closeMenu()" class="w-full flex items-center space-x-4 p-4 text-left text-white bg-secondary-blue rounded-lg hover:bg-[#152339] transition shadow-md">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                <span class="text-lg font-semibold">Merch</span>
+            </a>
+
+            <!-- Menu Button -->
+            <a href="#menu" onclick="handleMobileMenuClick('menu')" class="w-full flex items-center space-x-4 p-4 text-left text-white bg-secondary-blue rounded-lg hover:bg-[#152339] transition shadow-md">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.8 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.8 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.2 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
+                <span class="text-lg font-semibold">Menu</span>
+            </a >
+
+            <!-- Order Now Button (Opens Modal) -->
+            <button onclick="handleMobileMenuClick('orderModal')" class="w-full flex items-center space-x-4 p-4 text-left text-white bg-custom-red rounded-lg hover:bg-red-700 transition shadow-md">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                <span class="text-lg font-semibold">Order Now</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Carousel and Overlay --><section id="hero" class="relative w-full overflow-hidden h-[70vh]">
+        <div id="carousel-container" class="relative w-full h-full">
+            <!-- Carousel items will be injected here by JavaScript --></div>
+
+        <!-- Overlay with Elegant Title and Subtitle --><div class="hero-overlay">
+            <!-- Restaurant Title maintaining the original #718FAD color --><h1 class="font-bebas-neue text-6xl sm:text-8xl lg:text-[10rem] text-[#718FAD] tracking-tight no-box text-center drop-shadow-lg leading-none" style="letter-spacing: 0.05em;">
+                LITTLE SHACK
+            </h1>
+            <!-- Subtitle using custom-red --><p class="mt-4 text-lg sm:text-xl lg:text-2xl text-custom-red tracking-widest uppercase font-semibold no-box text-center">
+                SEAFOOD, DRINKS & MORE
+            </p>
+        </div>
+    </section>
+
+    <!-- Persuasive Description Section --><section id="description" class="py-10 px-4 sm:px-8 bg-primary-dark">
+        <!-- Paragraph is now white --><p class="max-w-4xl mx-auto text-center text-xl sm:text-2xl text-white font-serif italic no-box">
+            Discover the authentic taste of the coast in El Paso; a feast of fresh seafood prepared with passion that will transport you to the Pacific.
+        </p>
+    </section>
+
+    <!-- Hibiscus Aguachile Tostada Section --><section id="aguachile" class="w-full">
+        <div class="full-width-image relative" style="background-image: url('https://i.imgur.com/1BnZaUL.jpeg');">
+            <!--  --></div>
+        <!-- New, extended persuasive description --><div class="py-8 px-4 sm:px-8 bg-primary-dark text-white">
+            <p class="max-w-3xl mx-auto text-center text-lg sm:text-xl font-sans no-box">
+                Our tostada, topped with hibiscus flower aguachile, is not just a dish, it's an explosion of flavors that merges the freshness of the sea with the unique touch of sweet and sour. Every ingredient is carefully selected to transport you directly to the vibrant culinary culture of the coast. At LITTLE SHACK, every bite is a story, a tradition, and an invitation to celebrate good food with passion and joy.
+            </p>
+        </div>
+    </section>
+
+    <!-- Molcajete and Culture Section --><section id="molcajete" class="w-full">
+        <!--  --><div class="full-width-image" style="background-image: url('https://i.imgur.com/i5vSxaD.jpeg');">
+            </div>
+        <div class="py-10 px-4 sm:px-8 bg-primary-dark">
+            <!-- Heading is now white --><h2 class="text-3xl sm:text-4xl text-center text-white font-serif font-bold mb-4 no-box">
+                The Soul of the Coast in Texas
+            </h2>
+            <!-- Paragraph is now white --><p class="max-w-4xl mx-auto text-center text-lg sm:text-xl font-sans text-white no-box">
+                More than food, we offer a cultural experience. Our dishes, served with authenticity and warmth, reflect the rich Mexican culinary tradition, making every visit a special getaway.
+            </p>
+        </div>
+    </section>
+
+    <!-- Seafood Tacos Section --><section id="tostadas" class="w-full">
+        <!--  --><div class="full-width-image" style="background-image: url('https://i.imgur.com/Ae1OjPL.jpeg');">
+            </div>
+        <!-- Sexy Seafood Tacos Text --><div class="py-8 px-4 sm:px-8 bg-primary-dark text-white">
+            <p class="max-w-3xl mx-auto text-center text-lg sm:text-xl font-sans no-box">
+                Let yourself be seduced by our seafood tacos. Every tortilla is a temptation, filled with the ocean's most vibrant freshness and a touch of passion that ignites your senses. Prepare for an experience that goes beyond taste, a caress to the palate that will leave you craving more. Simply irresistible!
+            </p>
+        </div>
+    </section>
+
+    <!-- Fresh Seafood Section with Overlay --><section id="mariscos-costa" class="w-full relative">
+        <!--  --><div class="full-width-image" style="background-image: url('https://i.imgur.com/cF8vVHa.jpeg');">
+            </div>
+        <div class="hero-overlay !h-full">
+            <!-- Sexy Quality Text --><p class="text-2xl sm:text-3xl lg:text-5xl text-white font-serif italic font-extrabold tracking-wider no-box text-center drop-shadow-xl">
+                Our quality is an eternal romance: fresh ingredients, passion in every dish, and a flavor that will make you fall in love.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section id="contact" class="py-12 px-4 sm:px-8 bg-secondary-blue">
+        <div class="max-w-xl mx-auto">
+            <h2 class="text-4xl text-white font-bebas-neue tracking-widest text-center mb-6">CONTACT US</h2>
+            <p class="text-center text-gray-300 mb-8">Send us your questions, comments, or requests. We will get back to you as soon as possible.</p>
+
+            <form id="contactForm" class="space-y-4 p-6 bg-primary-dark rounded-xl shadow-2xl border border-accent-gold/20" onsubmit="submitContactForm(event)">
+                <!-- Name -->
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-300">Name</label>
+                    <input type="text" id="name" name="name" required class="mt-1 block w-full px-4 py-2 rounded-lg bg-secondary-blue border border-gray-600 focus:border-accent-gold focus:ring-accent-gold text-white shadow-sm transition">
+                </div>
+
+                <!-- Phone & Email (Responsive Grid) -->
+                <div class="sm:grid sm:grid-cols-2 sm:gap-4">
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-300">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required class="mt-1 block w-full px-4 py-2 rounded-lg bg-secondary-blue border border-gray-600 focus:border-accent-gold focus:ring-accent-gold text-white shadow-sm transition">
+                    </div>
+                
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
+                        <input type="email" id="email" name="email" required class="mt-1 block w-full px-4 py-2 rounded-lg bg-secondary-blue border border-gray-600 focus:border-accent-gold focus:ring-accent-gold text-white shadow-sm transition">
+                    </div>
+                </div>
+
+                <!-- Message -->
+                <div>
+                    <label for="message" class="block text-sm font-medium text-gray-300">Message</label>
+                    <textarea id="message" name="message" rows="4" required class="mt-1 block w-full px-4 py-2 rounded-lg bg-secondary-blue border border-gray-600 focus:border-accent-gold focus:ring-accent-gold text-white shadow-sm transition"></textarea>
+                </div>
+
+                <!-- Response Message Box (for feedback) -->
+                <div id="response-message" class="hidden p-3 rounded-lg text-sm font-medium transition duration-300 text-center"></div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="w-full flex items-center justify-center space-x-2 py-3 px-4 border border-transparent rounded-full shadow-lg text-lg font-bold text-white bg-custom-red hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50 transition duration-300 uppercase">
+                    Submit Message
+                    <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.842 5.228A2 2 0 0012 14c.737 0 1.432-.23 2.158-.772L21 8m-6 10H8a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2z"></path></svg>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Fixed Navigation Bar (Footer) (HEIGHT REDUCED TO 64PX) --><footer id="fixed-nav" class="fixed-footer fixed bottom-0 left-0 right-0 bg-primary-dark z-50 h-16 md:hidden">
+        <div class="flex h-full max-w-7xl mx-auto">
+            
+            <!-- Call & Locations Button --><button onclick="document.getElementById('locationModal').classList.remove('hidden');" class="flex-1 flex flex-col items-center justify-center text-white hover:bg-secondary-blue transition duration-300 p-2 rounded-tl-xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                <span class="text-xs mt-1 text-white">Call/Loc.</span>
+            </button>
+
+            <!-- Merch Button (NEW) - Icons and text now white --><a href="https://carlosalbertojimenez834-dotcom.github.io/merch-little-shack/" target="_blank" class="flex-1 flex flex-col items-center justify-center text-white hover:bg-secondary-blue transition duration-300 p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                <span class="text-xs mt-1 text-white">Merch</span>
+            </a>
+
+            <!-- Menu Button - Icons and text now white --><a href="#menu" class="flex-1 flex flex-col items-center justify-center text-white hover:bg-secondary-blue transition duration-300 p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.8 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.8 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.2 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
+                <span class="text-xs mt-1 text-white">Menu</span>
+            </a >
+
+            <!-- Order Now Button (Opens Modal) -->
+            <button onclick="document.getElementById('orderModal').classList.remove('hidden');" class="flex-1 flex flex-col items-center justify-center text-white hover:bg-secondary-blue transition duration-300 p-2 rounded-tr-xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                <span class="text-xs mt-1 text-white">Order Now</span>
+            </button>
+        </div>
+    </footer>
+
+    <!-- Locations Modal (Dynamic Content) --><div id="locationModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-[60]" onclick="this.classList.add('hidden')">
+        <div class="bg-white p-8 rounded-lg shadow-2xl max-w-md w-11/12 max-h-[80vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <h3 class="text-2xl font-serif text-primary-dark mb-4 border-b pb-2">Call or Visit a Location</h3>
+            
+            <!-- Container where interactive locations will be injected --><div id="locationsList" class="space-y-3">
+                <!-- Dynamic content injected by JS --></div>
+            
+            <!-- Close Button (now with white text) --><button onclick="document.getElementById('locationModal').classList.add('hidden');" class="mt-6 bg-custom-red text-white font-bold py-2 px-4 rounded-full w-full hover:bg-red-700 transition">Close</button>
+        </div>
+    </div>
+    
+    <!-- Order Options Modal (New Modal) --><div id="orderModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-[60]" onclick="this.classList.add('hidden')">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl max-w-lg w-11/12 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <h3 class="text-3xl font-bebas-neue text-custom-red tracking-wider mb-6 text-center">HOW WOULD YOU LIKE TO ORDER?</h3>
+            
+            <!-- Option 1: Uber Eats -->
+            <a id="uberEatsLink" href="" target="_blank" onclick="document.getElementById('orderModal').classList.add('hidden');" class="block mb-6 p-4 bg-green-600 hover:bg-green-700 transition duration-300 rounded-lg shadow-lg transform hover:scale-[1.02] cursor-pointer">
+                <div class="flex items-center text-white">
+                    <!-- Icon placeholder for delivery app --><svg class="w-8 h-8 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3 .895 3 2s-1.343 2-3 2-3 .895-3 2 1.343 2 3 2m0-8V6m0 4v3m0 3v2m0 0h12a2 2 0 002-2v-3a2 2 0 00-2-2H4a2 2 0 00-2 2v3a2 2 0 002 2h12zm-3-8h6a2 2 0 002-2V5a2 2 0 00-2-2h-6a2 2 0 00-2 2v3a2 2 0 002 2z"></path></svg>
+                    <div>
+                        <p class="text-xl font-bold font-bebas-neue tracking-wider">Order via Uber Eats</p>
+                        <p class="text-sm">Delivery to your location (Service fees may apply)</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Option 2: Order Online at Branch -->
+            <div class="mb-4">
+                <h4 class="text-xl font-bold text-primary-dark mb-3 border-b-2 border-primary-dark/20 pb-1">Order Online for Pickup:</h4>
+                <div id="branchOrderList" class="space-y-3">
+                    <!-- Dynamic SpotOn links injected here by JS -->
+                </div>
+            </div>
+            
+            <!-- Close Button -->
+            <button onclick="document.getElementById('orderModal').classList.add('hidden');" class="mt-4 bg-primary-dark text-white font-bold py-3 px-4 rounded-full w-full hover:bg-secondary-blue transition uppercase text-sm">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Array with image URLs for the carousel
+        const carouselImages = [
+            'https://i.imgur.com/Ak2IpJ3.jpeg',
+            'https://i.imgur.com/q5pzTXJ.jpeg',
+            'https://i.imgur.com/wgZevM3.jpeg',
+            'https://i.imgur.com/Rz5exzb.jpeg',
+            'https://i.imgur.com/RcVTNyo.jpeg'
+        ];
+
+        // NEW GLOBAL CONSTANTS FOR ORDERING
+        const uberEatsLink = 'https://share.google/fqEHu6dbkS5kLdfNU';
+
+        // DATA FOR THE 7 BRANCHES (UPDATED WITH SPOTON LINKS)
+        const branches = [
+            { name: 'Little Shack Cincinnati', address: '2701 N Mesa St #200, El Paso, TX 79902', phone: '+19156036007', spotOn: 'https://order.spoton.com/66c51ffd4edcc6f4385abae3' },
+            { name: 'Little Shack Edgemere', address: '12380 Edgemere Blvd #2627, El Paso, TX 79938', phone: '+19153001111', spotOn: 'https://order.spoton.com/6645391e194181003c633836' },
+            { name: 'Little Shack Festival', address: '5360 N Mesa St, El Paso, TX 79912', phone: '+19153211562', spotOn: 'https://order.spoton.com/670d573594bef285d048be44' },
+            { name: 'Little Shack George Dieter', address: '1355 George Dieter Dr Suite 104, El Paso, TX 79936', phone: '+19152617152', spotOn: 'https://order.spoton.com/66e1f3b4768ac1ecdc5714d7' },
+            { name: 'Little Shack Montwood', address: '12135 Montwood Dr #101, El Paso, TX 79936', phone: '+19153076656', spotOn: 'https://order.spoton.com/6511e4a598b2ddeddbf4165b' },
+            { name: 'Little Shack Resler', address: '865 Resler Dr h, El Paso, TX 79912', phone: '+19153073205', spotOn: 'https://order.spoton.com/67363d4ad2ca456ea040e8d' },
+            { name: 'Little Shack Airway', address: '1300 Airway Blvd Ste.102, El Paso, TX 79925', phone: '+19152571583', spotOn: 'https://order.spoton.com/689e24dba7898cdc4f078631' },
+        ];
+
+        let currentIndex = 0;
+        const carouselContainer = document.getElementById('carousel-container');
+        const intervalTime = 3000; // 3 seconds
+
+        // --- MOBILE MENU FUNCTIONS ---
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const menuIconOpen = document.getElementById('menu-icon-open');
+            const menuIconClose = document.getElementById('menu-icon-close');
+
+            if (menu.classList.contains('-translate-x-full')) {
+                // Open menu
+                menu.classList.remove('hidden');
+                setTimeout(() => {
+                    menu.classList.remove('-translate-x-full');
+                    menu.classList.add('translate-x-0');
+                }, 10);
+                menuIconOpen.classList.add('hidden');
+                menuIconClose.classList.remove('hidden');
+            } else {
+                // Close menu
+                closeMenu();
+            }
+        }
+
+        function closeMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const menuIconOpen = document.getElementById('menu-icon-open');
+            const menuIconClose = document.getElementById('menu-icon-close');
+
+            menu.classList.add('-translate-x-full');
+            menu.classList.remove('translate-x-0');
+            setTimeout(() => {
+                menu.classList.add('hidden');
+            }, 300); // Wait for transition
+            menuIconOpen.classList.remove('hidden');
+            menuIconClose.classList.add('hidden');
+        }
+
+        function handleMobileMenuClick(target) {
+            closeMenu();
+            if (target === 'locationModal') {
+                // Delay opening modal until menu is closed
+                setTimeout(() => {
+                     document.getElementById('locationModal').classList.remove('hidden');
+                }, 350); 
+            } else if (target === 'orderModal') {
+                // Delay opening modal until menu is closed
+                setTimeout(() => {
+                     document.getElementById('orderModal').classList.remove('hidden');
+                }, 350);
+            } else if (target === 'menu') {
+                // Scrolls to the menu section
+                setTimeout(() => {
+                    document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' });
+                }, 350);
+            }
+            // For Merch (external link), closing the menu is enough as the link handles navigation
+        }
+        // --- END MOBILE MENU FUNCTIONS ---
+
+        /**
+         * Initializes and displays the first image of the carousel.
+         */
+        function initializeCarousel() {
+            carouselImages.forEach((url, index) => {
+                const div = document.createElement('div');
+                div.className = 'carousel-item absolute top-0 left-0 opacity-0';
+                div.style.backgroundImage = `url('${url}')`;
+                div.id = `item-${index}`;
+                carouselContainer.appendChild(div);
+
+                if (index === 0) {
+                    div.classList.add('opacity-100');
+                    div.classList.remove('opacity-0');
+                }
+            });
+        }
+
+        /**
+         * Switches to the next carousel image.
+         */
+        function nextSlide() {
+            const currentItem = document.getElementById(`item-${currentIndex}`);
+            if (currentItem) {
+                currentItem.classList.remove('opacity-100');
+                currentItem.classList.add('opacity-0');
+            }
+
+            currentIndex = (currentIndex + 1) % carouselImages.length;
+
+            const nextItem = document.getElementById(`item-${currentIndex}`);
+            if (nextItem) {
+                nextItem.classList.remove('opacity-0');
+                nextItem.classList.add('opacity-100');
+            }
+        }
+        
+        /**
+         * Generates the interactive elements for the locations/call modal.
+         */
+        function populateLocationsModal() {
+            const listContainer = document.getElementById('locationsList');
+            if (!listContainer) return;
+
+            // Clears previous content
+            listContainer.innerHTML = '';
+
+            branches.forEach(branch => {
+                // Generates the Google Maps link for the address
+                const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(branch.address)}`;
+
+                const div = document.createElement('div');
+                div.className = 'p-3 bg-gray-50 rounded-lg shadow-sm border border-gray-200';
+                
+                // Link content
+                div.innerHTML = `
+                    <div class="text-primary-dark mb-2">
+                        <p class="font-bold text-lg">${branch.name}</p>
+                        <p class="text-sm text-gray-600">${branch.address}</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <!-- Call Button/Link --><a href="tel:${branch.phone}" class="location-link flex-1 flex items-center justify-center p-2 bg-custom-red text-white text-sm font-semibold rounded-full hover:bg-red-700 transition">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                            Call
+                        </a>
+
+                        <!-- View on Map Button/Link --><a href="${mapsLink}" target="_blank" class="location-link flex-1 flex items-center justify-center p-2 bg-secondary-blue text-white text-sm font-semibold rounded-full hover:bg-primary-dark transition">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            Map
+                        </a>
+                    </div>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        /**
+         * Generates the interactive elements for the order modal (Uber Eats and SpotOn links).
+         */
+        function populateOrderModal() {
+            const listContainer = document.getElementById('branchOrderList');
+            const uberLinkElement = document.getElementById('uberEatsLink');
+            if (!listContainer || !uberLinkElement) return;
+
+            // 1. Update the Uber Eats link
+            uberLinkElement.href = uberEatsLink;
+
+            // 2. Clear previous content
+            listContainer.innerHTML = '';
+
+            // 3. Populate SpotOn links for branches (Order Online for Pickup)
+            branches.forEach(branch => {
+                const link = document.createElement('a');
+                link.href = branch.spotOn;
+                link.target = '_blank';
+                // Close the modal upon clicking a branch link
+                link.onclick = () => document.getElementById('orderModal').classList.add('hidden'); 
+                
+                // Style for the branch order link
+                link.className = 'flex items-center justify-between p-3 bg-gray-100 hover:bg-accent-gold/20 transition rounded-lg shadow-sm border border-gray-200 text-primary-dark font-semibold text-sm location-link';
+                
+                link.innerHTML = `
+                    <span class="text-base">${branch.name}</span>
+                    <span class="flex items-center text-custom-red">
+                        Order Here
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </span>
+                `;
+                listContainer.appendChild(link);
+            });
+        }
+
+        /**
+         * Handles the contact form submission.
+         * Since there is no backend, it simulates the submission and shows a success message.
+         */
+        function submitContactForm(event) {
+            event.preventDefault();
+            const form = event.target;
+            const messageBox = document.getElementById('response-message');
+            const data = {
+                name: form.name.value,
+                phone: form.phone.value,
+                email: form.email.value,
+                message: form.message.value
+            };
+
+            // Simulated email target
+            const emailTarget = 'littleshackinc@gmail.com';
+
+            console.log('--- Form Submission Simulation ---');
+            console.log(`Simulated sending contact message to: ${emailTarget}`);
+            console.log('Data:', data);
+            console.log('----------------------------------');
+
+            // Display success message in the UI (in Spanish)
+            messageBox.classList.remove('hidden', 'bg-red-500/20');
+            messageBox.classList.add('bg-green-500/20', 'text-green-300');
+            // Updated success message to Spanish
+            messageBox.textContent = `¡Mensaje simulado enviado! Un miembro del equipo te contactará en ${data.email}. (Destino: ${emailTarget})`;
+            
+            // Clear the form after a simulated successful submission
+            form.reset();
+
+            // Hide the message after a few seconds
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+                messageBox.classList.remove('bg-green-500/20', 'text-green-300');
+            }, 7000);
+        }
+
+        // Initializes the carousel and modals when the window loads
+        window.onload = function() {
+            initializeCarousel();
+            populateLocationsModal(); // Populates Call/Location modal content
+            populateOrderModal(); // Populates Order Now modal content
+            setInterval(nextSlide, intervalTime);
+        };
+
+    </script>
+</body>
+</html>
